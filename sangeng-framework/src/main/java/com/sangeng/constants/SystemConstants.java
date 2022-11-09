@@ -15,4 +15,9 @@ public class SystemConstants {
      */
     public static final int ARTICLE_STATUS_DELETED = 1;
 
+    /**
+     * 正常状态
+     */
+    public static final String STATUS_NORMAL = "0";
+
 }
