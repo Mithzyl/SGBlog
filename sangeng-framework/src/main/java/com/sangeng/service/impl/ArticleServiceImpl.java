@@ -7,11 +7,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
+import com.sangeng.domain.vo.HotArticleVO;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService{
@@ -39,6 +43,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
         // 将page记录存入List集合中
         List<Article> articleList = page.getRecords();
-        return ResponseResult.okResult(articleList);
+
+        // 转换为HotArticleVo进行返回
+        List<HotArticleVO> hotArticleVOList = new ArrayList<>();
+        for(Article article : articleList){
+            HotArticleVO hotArticleVO = new HotArticleVO();
+            BeanUtils.copyProperties(article, hotArticleVO);
+            hotArticleVOList.add(hotArticleVO);
+        }
+
+        return ResponseResult.okResult(hotArticleVOList);
     }
 }
