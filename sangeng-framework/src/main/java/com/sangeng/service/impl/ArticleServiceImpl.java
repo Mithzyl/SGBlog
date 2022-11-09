@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.vo.HotArticleVO;
@@ -28,10 +29,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
          */
         LambdaQueryWrapper<Article> articleQueryWrapper = new LambdaQueryWrapper();
         // 展示未删除文章
-        articleQueryWrapper.eq(Article::getDelFlag, 0); // 0:未删除 1:已删除
+        articleQueryWrapper.eq(Article::getDelFlag, SystemConstants.ARTICLE_STATUS_NORMAL); // 0:未删除 1:已删除
 
         // 不展示草稿
-        articleQueryWrapper.eq(Article::getStatus, "0"); // "0": 已发布 "1": 草稿
+        articleQueryWrapper.eq(Article::getStatus, SystemConstants.ARTICLE_STATUS_NORMAL); // "0": 已发布 "1": 草稿
 
         // 按浏览量排序
         articleQueryWrapper.orderByDesc(Article::getViewCount);
