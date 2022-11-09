@@ -8,6 +8,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * 分类表(Category)表实体类
+ *
+ * @author makejava
+ * @since 2022-11-09 23:37:23
+ */
+@SuppressWarnings("serial")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,28 +23,25 @@ public class Category {
     @TableId
     private Long id;
 
-    // 分类名
+    //分类名
     private String name;
-
-    // 父分类id 没有父分类为-1
+    //父分类id，如果没有父分类为-1
     private Long pid;
-
-    // 描述
+    //描述
     private String description;
-
-    // 状态 0: 正常 1:禁用
+    //状态0:正常,1禁用
     private String status;
-
-    // 删除标志 0: 未删除 1: 已删除
-    private int delFlag;
-
+    
     private Long createBy;
-
-    // 创建时间
+    
     private Date createTime;
-
+    
     private Long updateBy;
     
-    // 修改时间
     private Date updateTime;
+    //删除标志（0代表未删除，1代表已删除）
+    private Integer delFlag;
+
+
+
 }
