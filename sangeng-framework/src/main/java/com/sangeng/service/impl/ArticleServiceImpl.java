@@ -11,6 +11,7 @@ import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.vo.HotArticleVO;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
+import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -46,12 +47,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         List<Article> articleList = page.getRecords();
 
         // 转换为HotArticleVo进行返回
-        List<HotArticleVO> hotArticleVOList = new ArrayList<>();
-        for(Article article : articleList){
-            HotArticleVO hotArticleVO = new HotArticleVO();
-            BeanUtils.copyProperties(article, hotArticleVO);
-            hotArticleVOList.add(hotArticleVO);
-        }
+        List<HotArticleVO> hotArticleVOList = BeanCopyUtils.copyBeanList(articleList, HotArticleVO.class);
 
         return ResponseResult.okResult(hotArticleVOList);
     }
