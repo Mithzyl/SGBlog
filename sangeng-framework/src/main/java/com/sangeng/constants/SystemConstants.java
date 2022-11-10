@@ -20,4 +20,9 @@ public class SystemConstants {
      */
     public static final String STATUS_NORMAL = "0";
 
+    /**
+     * 置顶
+     */
+    public static final String STATUS_TOP = "1";
+
 }

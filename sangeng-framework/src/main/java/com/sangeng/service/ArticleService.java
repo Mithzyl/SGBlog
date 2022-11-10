@@ -6,4 +6,6 @@ import com.sangeng.domain.entity.Article;
 
 public interface ArticleService extends IService<Article> {
     ResponseResult hotArticleList();
+
+    ResponseResult articleList(int pageNum, int pageSize, Long categoryId);
 }
