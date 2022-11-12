@@ -42,7 +42,7 @@ public class ArticleController {
     // 文章详情
     // 1. 查询文章具体内容
     // 2. 更新文章浏览量 (另一个方法 低耦合)
-    @GetMapping("/article/{id}")
+    @GetMapping("/{id}")
     public ResponseResult articleDetail(@PathVariable("id") Long id){
         ResponseResult responseResult = articleService.articleDetail(id);
 
@@ -50,8 +50,9 @@ public class ArticleController {
     }
 
     // 更新浏览量
-    @PutMapping("/updateViewCount/{id}")
-    public ResponseResult updateViewCount(@PathVariable("id") Long id){
+    @PutMapping("/ViewCount/{id}")
+    @CrossOrigin
+    public ResponseResult updateViewCount(@PathVariable("id")Long id){
         ResponseResult responseResult = articleService.updateViewCount(id);
 
         return responseResult;

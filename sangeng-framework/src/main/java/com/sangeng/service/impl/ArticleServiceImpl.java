@@ -10,6 +10,7 @@ import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
 import com.sangeng.domain.entity.Category;
+import com.sangeng.domain.vo.ArticleDetailVo;
 import com.sangeng.domain.vo.ArticleListVo;
 import com.sangeng.domain.vo.HotArticleVO;
 import com.sangeng.domain.vo.PageVo;
@@ -114,15 +115,30 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public ResponseResult articleDetail(Long id) {
+        Article article = getById(id);
 
+        // 查询文章分类名
+        Long categoryId = article.getCategoryId();
+        Category category = categoryService.getById(categoryId);
+        if(ObjectUtils.isNotNull(category)) {
+            article.setCategoryName(category.getName());
+        }
 
-        return null;
+        ArticleDetailVo articleDetailVo = BeanCopyUtils.copyBean(article, ArticleDetailVo.class);
+
+        return ResponseResult.okResult(articleDetailVo);
     }
 
     @Override
     public ResponseResult updateViewCount(Long id) {
-        // 1.查询
+        // 1. 根据查询id查询文章
+        // 2. 更新文章浏览量
+        Article article = getById(id);
+        article.setViewCount(article.getViewCount() + 1);
+        //saveOrUpdate(article);
 
-        return ResponseResult.okResult();
+        // TODO : 403 Forbidden
+
+        return ResponseResult.okResult(article);
     }
 }
