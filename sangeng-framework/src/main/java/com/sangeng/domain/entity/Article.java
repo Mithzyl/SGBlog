@@ -2,6 +2,7 @@ package com.sangeng.domain.entity;
 
 import java.util.Date;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 /**
  * 文章表(Article)表实体类
@@ -20,6 +22,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Accessors(chain = true)
 @TableName("sg_article")
 public class Article {
 
@@ -31,6 +34,10 @@ public class Article {
     private String content;
     //文章摘要
     private String summary;
+
+    @TableField(exist = false)
+    private String categoryName;
+
     //所属分类id
     private Long categoryId;
     //缩略图

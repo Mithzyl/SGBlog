@@ -9,19 +9,28 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Article;
+import com.sangeng.domain.entity.Category;
+import com.sangeng.domain.vo.ArticleListVo;
 import com.sangeng.domain.vo.HotArticleVO;
+import com.sangeng.domain.vo.PageVo;
 import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
+import com.sangeng.service.CategoryService;
 import com.sangeng.utils.BeanCopyUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> implements ArticleService{
+
+    @Resource
+    private CategoryService categoryService;
+
     @Override
     public ResponseResult hotArticleList() {
         /**
@@ -73,9 +82,47 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         Page<Article> articlePage = new Page<>(pageNum, pageSize);
         page(articlePage, articleLambdaQueryWrapper);
 
-        List<Article> article = articlePage.getRecords();
+        List<Article> articles = articlePage.getRecords();
 
         // TODO: Create VO class to return certain value
-        return ResponseResult.okResult(article);
+
+        // stream流 foreach对每个article.categoryName赋值
+        articles.stream()
+                .forEach(article
+                        ->
+                        article.setCategoryName(categoryService.getById(article.getCategoryId()).getName()));
+
+        // stream流 map赋值添加lombok @Accessors
+//        List<Article> collect = articles.stream()
+//                .map(article -> article.setCategoryName(categoryService.getById(article.getCategoryId()).getName()))
+//                .collect(Collectors.toList());
+
+
+        // 查询categoryName
+        // 通过查询每个article的categoryId获取其名字
+//        for(Article article : articles){
+//            Category category = categoryService.getById(article.getCategoryId());
+//            article.setCategoryName(category.getName());
+//        }
+
+        List<ArticleListVo> articleListVos = BeanCopyUtils.copyBeanList(articles, ArticleListVo.class);
+        PageVo pageVo = new PageVo(articleListVos, articlePage.getTotal());
+
+
+        return ResponseResult.okResult(pageVo);
+    }
+
+    @Override
+    public ResponseResult articleDetail(Long id) {
+
+
+        return null;
+    }
+
+    @Override
+    public ResponseResult updateViewCount(Long id) {
+        // 1.查询
+
+        return ResponseResult.okResult();
     }
 }
