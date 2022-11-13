@@ -25,4 +25,9 @@ public class SystemConstants {
      */
     public static final String STATUS_TOP = "1";
 
+    /**
+     * 友链状态为审核通过
+     */
+    public static final String  LINK_STATUS_NORMAL = "0";
+
 }
