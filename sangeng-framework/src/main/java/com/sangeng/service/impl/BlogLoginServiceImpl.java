@@ -1,14 +1,22 @@
 package com.sangeng.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
+import com.sangeng.domain.entity.LoginUser;
 import com.sangeng.domain.entity.SysUser;
+import com.sangeng.domain.vo.BlogUserLoginVo;
+import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.mapper.SysUserMapper;
 import com.sangeng.service.BlogLoginService;
+import com.sangeng.utils.BeanCopyUtils;
+import com.sangeng.utils.JwtUtil;
+import com.sangeng.utils.RedisCache;
 import io.netty.util.internal.SystemPropertyUtil;
 import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,14 +25,38 @@ import javax.annotation.Resource;
 public class BlogLoginServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements BlogLoginService {
 
     @Resource
+    private RedisCache redisCache;
+
+    @Resource
     private AuthenticationManager authenticationManager;
     @Override
     public ResponseResult login(User user) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
 
-        authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+        Authentication authenticate = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-        return null;
+        // 判断是否认证通过
+        if (ObjectUtils.isNotNull(authenticate)){
+            //  根据用户名获取jwt
+            LoginUser loginUser = (LoginUser) authenticate.getPrincipal();
+            String userId = loginUser.getUser().getId().toString();
+
+            String jwt = JwtUtil.createJWT(userId);
+
+            //  用户信息存入redis
+            redisCache.setCacheObject("bloglogin:"+userId, loginUser);
+
+            // 封装token 和 userinfo进行返回
+            UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser, UserInfoVo.class);
+
+            BlogUserLoginVo blogUserLoginVo = new BlogUserLoginVo(jwt, userInfoVo);
+
+            return ResponseResult.okResult(blogUserLoginVo);
+
+        }else{
+            throw new RuntimeException("用户名或密码错误");
+        }
+
     }
 }

@@ -135,10 +135,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 2. 更新文章浏览量
         Article article = getById(id);
         article.setViewCount(article.getViewCount() + 1);
-        //saveOrUpdate(article);
+        saveOrUpdate(article);
 
-        // TODO : 403 Forbidden
+        // TODO : handle requests concurrently
 
-        return ResponseResult.okResult(article);
+        return ResponseResult.okResult();
     }
 }
