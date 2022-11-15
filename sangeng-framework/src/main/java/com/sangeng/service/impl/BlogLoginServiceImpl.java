@@ -48,7 +48,7 @@ public class BlogLoginServiceImpl extends ServiceImpl<SysUserMapper, SysUser> im
             redisCache.setCacheObject("bloglogin:"+userId, loginUser);
 
             // 封装token 和 userinfo进行返回
-            UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser, UserInfoVo.class);
+            UserInfoVo userInfoVo = BeanCopyUtils.copyBean(loginUser.getUser(), UserInfoVo.class);
 
             BlogUserLoginVo blogUserLoginVo = new BlogUserLoginVo(jwt, userInfoVo);
 
