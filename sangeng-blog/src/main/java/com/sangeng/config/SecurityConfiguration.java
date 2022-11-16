@@ -1,5 +1,6 @@
 package com.sangeng.config;
 
+import com.sangeng.filter.JwtAuthenticationTokenFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,10 +10,16 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
+
+    @Resource
+    private JwtAuthenticationTokenFilter jwtAuthenticationTokenFilter;
 
     // 关闭登录
     @Override
@@ -27,11 +34,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .authorizeRequests()
             // 对于登录接口 允许匿名访问
             .antMatchers("/login").anonymous()
+            //jwt过滤器测试用，如果测试没有问题吧这里删除了
+            .antMatchers("/link/getAllLink").authenticated()
             // 除上面外的所有请求全部不需要认证即可访问
             .anyRequest().permitAll();
 
         // 屏蔽退出登录
         http.logout().disable();
+
+        // 把jwtAuthenticationTokenFilter添加到SpringSecurity的过滤器链中
+        http.addFilterBefore(jwtAuthenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         // 允许跨域
         http.cors();
