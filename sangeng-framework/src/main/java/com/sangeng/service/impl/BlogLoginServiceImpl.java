@@ -7,6 +7,7 @@ import com.sangeng.domain.entity.LoginUser;
 import com.sangeng.domain.entity.SysUser;
 import com.sangeng.domain.vo.BlogUserLoginVo;
 import com.sangeng.domain.vo.UserInfoVo;
+import com.sangeng.enums.AppHttpCodeEnum;
 import com.sangeng.mapper.SysUserMapper;
 import com.sangeng.service.BlogLoginService;
 import com.sangeng.utils.BeanCopyUtils;
@@ -17,7 +18,10 @@ import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
@@ -57,6 +61,30 @@ public class BlogLoginServiceImpl extends ServiceImpl<SysUserMapper, SysUser> im
         }else{
             throw new RuntimeException("用户名或密码错误");
         }
+
+    }
+
+    @Override
+    public ResponseResult logout() {
+
+        // jwt解析??
+        // 从SecurityContext中获取用户信息和userId
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        String userId = loginUser.getUser().getId().toString();
+
+        // 获取redis信息
+        String redisKey = "bloglogin:" + userId;
+        Object cacheObject = redisCache.getCacheObject(redisKey);
+        if(ObjectUtils.isNotNull(cacheObject)){
+            // redis中存在用户信息
+            // 删除redis中的信息
+            redisCache.deleteObject(redisKey);
+
+        }
+        SecurityContextHolder.clearContext();
+
+        return ResponseResult.okResult(AppHttpCodeEnum.SUCCESS.getCode(), AppHttpCodeEnum.SUCCESS.getMessage());
 
     }
 }

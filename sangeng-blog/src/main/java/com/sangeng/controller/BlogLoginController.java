@@ -30,4 +30,13 @@ public class BlogLoginController {
 
         return responseResult;
     }
+
+    @PostMapping("/logout")
+    public ResponseResult logout(){
+
+        // 删除redis中的用户信息
+        ResponseResult responseResult = blogLoginService.logout();
+
+        return responseResult;
+    }
 }

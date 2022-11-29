@@ -9,4 +9,6 @@ public interface BlogLoginService extends IService<SysUser> {
 
 
     ResponseResult login(User user);
+
+    ResponseResult logout();
 }
