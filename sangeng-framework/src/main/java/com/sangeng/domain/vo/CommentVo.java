@@ -1,6 +1,5 @@
 package com.sangeng.domain.vo;
 
-import com.sangeng.domain.entity.Comment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,9 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class CommentListVo {
+@AllArgsConstructor
+public class CommentVo {
 
     private Long id;
 
@@ -24,8 +23,8 @@ public class CommentListVo {
     // 评论内容
     private String content;
 
-    // 所回复的目标评论userid
-    private Long toCommentUserid;
+    // 回复的目标评论的userID；
+    private Long toCommentUserId;
     private String toCommentUserName;
 
     // 回复目标评论id
@@ -35,10 +34,8 @@ public class CommentListVo {
 
     private Date createTime;
 
-    private String userName;
+    private String username;
 
-    // 子评论列表
+    // 子评论
     private List<CommentVo> children;
-
-
 }

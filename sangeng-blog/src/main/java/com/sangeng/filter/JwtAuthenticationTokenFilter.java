@@ -36,6 +36,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         if(!StringUtils.hasText(token)){
             // 该接口不需要登录 放行
             filterChain.doFilter(request, response);
+            return;
         }
 
         // 解析token获取userid

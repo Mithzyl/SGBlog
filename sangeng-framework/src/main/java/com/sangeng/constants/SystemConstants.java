@@ -45,4 +45,9 @@ public class SystemConstants {
      */
     public static final Long ROOT_COMMENT = Long.valueOf(-1);
 
+    /**
+     * 评论目标用户不存在
+     */
+    public static final Long TO_COMMENT_USER_ID_NOT_EXIST = Long.valueOf(-1);
+
 }

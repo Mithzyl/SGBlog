@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.LoginUser;
-import com.sangeng.domain.entity.SysUser;
+import com.sangeng.domain.entity.User;
 import com.sangeng.domain.vo.BlogUserLoginVo;
 import com.sangeng.domain.vo.UserInfoVo;
 import com.sangeng.enums.AppHttpCodeEnum;
@@ -13,20 +13,16 @@ import com.sangeng.service.BlogLoginService;
 import com.sangeng.utils.BeanCopyUtils;
 import com.sangeng.utils.JwtUtil;
 import com.sangeng.utils.RedisCache;
-import io.netty.util.internal.SystemPropertyUtil;
-import org.apache.catalina.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 
 @Service
-public class BlogLoginServiceImpl extends ServiceImpl<SysUserMapper, SysUser> implements BlogLoginService {
+public class BlogLoginServiceImpl extends ServiceImpl<SysUserMapper, User> implements BlogLoginService {
 
     @Resource
     private RedisCache redisCache;
@@ -34,7 +30,7 @@ public class BlogLoginServiceImpl extends ServiceImpl<SysUserMapper, SysUser> im
     @Resource
     private AuthenticationManager authenticationManager;
     @Override
-    public ResponseResult login(User user) {
+    public ResponseResult login(org.apache.catalina.User user) {
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword());
 
