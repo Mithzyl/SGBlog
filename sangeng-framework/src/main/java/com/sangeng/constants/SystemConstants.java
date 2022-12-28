@@ -28,6 +28,21 @@ public class SystemConstants {
     /**
      * 友链状态为审核通过
      */
-    public static final String  LINK_STATUS_NORMAL = "0";
+    public static final String LINK_STATUS_NORMAL = "0";
+
+    /**
+     * 评论类型为文章评论
+     */
+    public static final String ARTICLE_COMMENT = "0";
+
+    /**
+     * 评论类型为友联评论
+     */
+    public static final String LINK_COMMENT = "1";
+
+    /**
+     * 评论为根评论
+     */
+    public static final Long ROOT_COMMENT = Long.valueOf(-1);
 
 }
