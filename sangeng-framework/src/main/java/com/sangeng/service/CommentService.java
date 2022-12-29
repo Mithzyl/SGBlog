@@ -13,9 +13,11 @@ import com.sangeng.domain.entity.Comment;
  */
 public interface CommentService extends IService<Comment> {
 
-    ResponseResult commentList(Long articleId, int pageNum, int pageSize);
+    ResponseResult commentList(String type, Long articleId, int pageNum, int pageSize);
 
     ResponseResult addComment(Comment comment);
+
+    ResponseResult linkCommentList(Long linkId, int pageNum, int pageSize);
 }
 
 

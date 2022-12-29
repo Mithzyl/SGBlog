@@ -1,5 +1,6 @@
 package com.sangeng.controller;
 
+import com.sangeng.constants.SystemConstants;
 import com.sangeng.domain.ResponseResult;
 import com.sangeng.domain.entity.Comment;
 import com.sangeng.service.CommentService;
@@ -23,11 +24,11 @@ public class CommentController {
      */
     @GetMapping("/commentList")
     public ResponseResult commentList(Long articleId, int pageNum, int pageSize){
-        return commentService.commentList(articleId, pageNum, pageSize);
+        return commentService.commentList(SystemConstants.ARTICLE_COMMENT, articleId, pageNum, pageSize);
     }
 
     /**
-     * 发表评论
+     * 发表文章评论
      * @param comment
      * @return
      */
@@ -35,5 +36,10 @@ public class CommentController {
     public ResponseResult addComment(@RequestBody Comment comment){
 
         return commentService.addComment(comment);
+    }
+
+    @GetMapping("/linkCommentList")
+    public ResponseResult linkCommentList(int pageNum, int pageSize){
+        return commentService.commentList(SystemConstants.LINK_COMMENT, null, pageNum, pageSize);
     }
 }

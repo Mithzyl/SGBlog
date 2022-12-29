@@ -34,23 +34,20 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
     private UserService userService;
 
     @Override
-    public ResponseResult commentList(Long articleId, int pageNum, int pageSize) {
+    public ResponseResult commentList(String type, Long articleId, int pageNum, int pageSize) {
         LambdaQueryWrapper<Comment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
 
-        // 查询类型为文章的评论
-        // TODO: 替换0为Constants常量
-        lambdaQueryWrapper.eq(Comment::getType, SystemConstants.ARTICLE_COMMENT);
+        // 根据传入的类型判断查询的评论为友联还是文章
+        // 根据是否传入了文章id判断查询的评论为友联还是文章
+        lambdaQueryWrapper.eq(SystemConstants.ARTICLE_COMMENT.equals(type), Comment::getArticleId, articleId);
 
-        // 根据文章id查询评论
-        lambdaQueryWrapper.eq(Comment::getArticleId, articleId);
-
+        // 查询评论类型
+        lambdaQueryWrapper.eq(Comment::getType, type);
         // 查询为根评论的评论
-        // TODO: 替换0为常量
         lambdaQueryWrapper.eq(Comment::getRootId, SystemConstants.ROOT_COMMENT);
 
         Page<Comment> page = new Page<>(pageNum, pageSize);
         page(page, lambdaQueryWrapper);
-        System.out.println(page.getRecords());
 
         // 转换为CommentListVo
         List<CommentVo> listVos = toCommentVoList(page.getRecords());
@@ -77,6 +74,31 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment> impl
         save(comment);
 
         return ResponseResult.okResult();
+    }
+
+    @Override
+    public ResponseResult linkCommentList(Long linkId, int pageNum, int pageSize) {
+        LambdaQueryWrapper<Comment> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(Comment::getType, SystemConstants.LINK_COMMENT);
+
+        Page<Comment> page = new Page<>(pageNum, pageSize);
+        page(page, lambdaQueryWrapper);
+
+        List<CommentVo> commentVos = toCommentVoList(page.getRecords());
+
+//        for(CommentVo commentVo : commentVos){
+//            List<CommentVo> children = getChildren(commentVo.getId());
+//
+//            commentVo.setChildren(children);
+//        }
+
+        commentVos.stream().forEach(commentVo -> {
+            commentVo.setChildren(
+                    getChildren(commentVo.getId())
+            );
+        });
+
+        return ResponseResult.okResult(commentVos);
     }
 
     /**
