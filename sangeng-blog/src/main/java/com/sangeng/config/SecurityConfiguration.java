@@ -46,6 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             //jwt过滤器测试用，如果测试没有问题把
             // 这里删除了.antMatchers("/link/getAllLink").authenticated()
             //.antMatchers("/logout").authenticated()
+//                .antMatchers("/upload").authenticated()
 
             // 查询用户信息测试token认证
             //.antMatchers("/user/userInfo").authenticated()

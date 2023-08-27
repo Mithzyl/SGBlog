@@ -46,3 +46,4 @@ mybatis-plus:
 oss:
   accessKey: kPO63RPmSWJyRclH_X6tGCdVUzwaeFiT326_ACoJ
   secretKey: 9LYAvL4Nofc7nq6fsDEbcrHXFcR156lWAErjWF_p
+  bucket: mith-blog
