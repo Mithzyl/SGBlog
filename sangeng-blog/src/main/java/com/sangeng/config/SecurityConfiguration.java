@@ -49,7 +49,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //                .antMatchers("/upload").authenticated()
 
             // 查询用户信息测试token认证
-            //.antMatchers("/user/userInfo").authenticated()
+            .antMatchers("/user/userInfo").authenticated()
 
             // 除上面外的所有请求全部不需要认证即可访问
             .anyRequest().permitAll();
