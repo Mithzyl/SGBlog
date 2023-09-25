@@ -31,7 +31,7 @@ public class BlogLoginController {
         return responseResult;
     }
 
-    @PostMapping("/logout")
+    @PostMapping("/user/logout")
     public ResponseResult logout(){
 
         // 删除redis中的用户信息
@@ -39,4 +39,5 @@ public class BlogLoginController {
 
         return responseResult;
     }
+
 }
