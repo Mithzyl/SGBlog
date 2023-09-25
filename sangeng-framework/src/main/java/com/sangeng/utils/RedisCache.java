@@ -235,4 +235,9 @@ public class RedisCache
     {
         return redisTemplate.keys(pattern);
     }
+
+    // 更下cacheMap的value
+    public void incrementCacheMapValue(String key, String hKey, long v){
+        redisTemplate.boundHashOps(key).increment(hKey, v);
+    }
 }

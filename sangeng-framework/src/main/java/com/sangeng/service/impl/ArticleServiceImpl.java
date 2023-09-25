@@ -18,6 +18,7 @@ import com.sangeng.mapper.ArticleMapper;
 import com.sangeng.service.ArticleService;
 import com.sangeng.service.CategoryService;
 import com.sangeng.utils.BeanCopyUtils;
+import com.sangeng.utils.RedisCache;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Resource
     private CategoryService categoryService;
+
+    @Resource
+    private RedisCache redisCache;
 
     @Override
     public ResponseResult hotArticleList() {
@@ -117,6 +121,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
     public ResponseResult articleDetail(Long id) {
         Article article = getById(id);
 
+        // 从redis中获取viewCount
+        Integer viewCount = redisCache.getCacheMapValue("article:viewCount", id.toString());
+        article.setViewCount(viewCount.longValue());
+
         // 查询文章分类名
         Long categoryId = article.getCategoryId();
         Category category = categoryService.getById(categoryId);
@@ -135,9 +143,10 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
         // 2. 更新文章浏览量
         Article article = getById(id);
         article.setViewCount(article.getViewCount() + 1);
-        saveOrUpdate(article);
+//        saveOrUpdate(article);
 
-        // TODO : handle requests concurrently
+        // 更新redis浏览量
+        redisCache.incrementCacheMapValue("article:viewCount", id.toString(), 1);
 
         return ResponseResult.okResult();
     }

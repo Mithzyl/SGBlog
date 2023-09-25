@@ -50,11 +50,9 @@ public class ArticleController {
     }
 
     // 更新浏览量
-    @PutMapping("/ViewCount/{id}")
+    @PutMapping("/updateViewCount/{id}")
     @CrossOrigin
     public ResponseResult updateViewCount(@PathVariable("id")Long id){
-        ResponseResult responseResult = articleService.updateViewCount(id);
-
-        return responseResult;
+        return articleService.updateViewCount(id);
     }
 }
